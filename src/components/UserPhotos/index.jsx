@@ -15,6 +15,16 @@ import { useParams, Link } from "react-router-dom";
 import "./styles.css";
 import models from "../../modelData/models";
 
+// Import all images from src/images so we can reference them by file name
+const importAll = (r) => {
+  const images = {};
+  r.keys().forEach((item) => {
+    images[item.replace("./", "")] = r(item);
+  });
+  return images;
+};
+const images = importAll(require.context("../../images", false, /\.(png|jpe?g|svg)$/));
+
 /**
  * Define UserPhotos, a React component of Project 4.
  */
@@ -43,7 +53,11 @@ function UserPhotos() {
             <CardMedia
               component="img"
               height="400"
-              image={process.env.PUBLIC_URL + "/images/" + photo.file_name}
+              image={
+                images[photo.file_name]
+                  ? (images[photo.file_name].default || images[photo.file_name])
+                  : ""
+              }
               alt={photo.file_name}
             />
           )}
